@@ -95,11 +95,17 @@ export default function HotelsPage() {
       result = result.filter((h) => h.rating >= watchedMinRating);
     }
 
-    const [sortField, sortDir] = watchedSortBy.split('-') as [string, 'asc' | 'desc'];
+    const [sortFieldRaw, sortDir] = watchedSortBy.split('-') as [string, 'asc' | 'desc'];
+    const fieldMap: Record<string, keyof Hotel> = {
+      price: 'pricePerNight',
+      rating: 'rating',
+      name: 'name',
+    };
+    const sortField = fieldMap[sortFieldRaw] || 'pricePerNight';
     result.sort((a, b) => {
-      const aVal = a[sortField as keyof Hotel] as number;
-      const bVal = b[sortField as keyof Hotel] as number;
-      return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
+      const aVal = a[sortField];
+      const bVal = b[sortField];
+      return sortDir === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
     });
 
     return result;
