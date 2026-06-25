@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setSearch } from '@/store/slices/searchSlice';
@@ -44,8 +44,10 @@ function Combobox({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const filteredOptions = options.filter((opt) =>
-    opt.label.toLowerCase().includes(search.toLowerCase())
+  const filteredOptions = useMemo(
+    () =>
+      options.filter((opt) => opt.label.toLowerCase().includes(search.toLowerCase())),
+    [options, search]
   );
 
   useEffect(() => {
@@ -188,19 +190,27 @@ export default function Home() {
     },
   });
 
-  useEffect(() => {
+   useEffect(() => {
     async function loadDestinations() {
       try {
         const res = await fetch('https://countriesnow.space/api/v0.1/countries');
         const data: { data: CountryData[] } = await res.json();
-        const options: DestinationOption[] = data.data.flatMap((country) =>
-          country.cities.map((city) => ({
-            label: `${city}, ${country.country}`,
-            value: `${city}, ${country.country}`,
-            city,
-            country: country.country,
-          }))
-        );
+        const seen = new Set<string>();
+        const options: DestinationOption[] = [];
+        for (const country of data.data) {
+          for (const city of country.cities) {
+            const value = `${city}, ${country.country}`;
+            if (!seen.has(value)) {
+              seen.add(value);
+              options.push({
+                label: value,
+                value,
+                city,
+                country: country.country,
+              });
+            }
+          }
+        }
         setDestinations(options);
       } catch (error) {
         console.error('Failed to load destinations:', error);

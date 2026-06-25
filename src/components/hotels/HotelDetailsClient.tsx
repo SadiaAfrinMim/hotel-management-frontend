@@ -60,6 +60,7 @@ export default function HotelDetailsClient({ hotel }: HotelDetailsClientProps) {
     const booking: Booking = {
       id: `${hotel.id}-${Date.now()}`,
       hotelId: hotel.id,
+      hotelName: hotel.name,
       checkIn: search.checkIn || new Date().toISOString().split('T')[0],
       checkOut: search.checkOut || new Date(Date.now() + 86400000).toISOString().split('T')[0],
       guests: search.guests,

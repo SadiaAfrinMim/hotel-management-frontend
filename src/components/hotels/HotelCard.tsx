@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { MapPin, Star, Users, BedDouble } from 'lucide-react';
 import { Hotel } from '@/store/slices/hotelSlice';
 
@@ -57,9 +58,9 @@ export default function HotelCard({ hotel }: HotelCardProps) {
               ${hotel.pricePerNight.toFixed(2)}
             </p>
           </div>
-          <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+          <Link href={`/hotels/${hotel.id}`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors text-center">
             View Deal
-          </button>
+          </Link>
         </div>
       </div>
     </div>
