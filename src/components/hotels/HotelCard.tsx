@@ -8,15 +8,22 @@ interface HotelCardProps {
 }
 
 export default function HotelCard({ hotel }: HotelCardProps) {
+  const imageSrc = hotel.images?.[0]
+    ? hotel.images[0].startsWith('http')
+      ? hotel.images[0]
+      : `https://cdn.dummyjson.com${hotel.images[0]}`
+    : '/placeholder.jpg';
+
   return (
     <div className="group bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
-      <div className="relative h-48 w-full bg-gray-200 overflow-hidden">
-        <Image
-          src={hotel.images?.[0] ?? '/placeholder.jpg'}
+      <div className="relative h-48 w-full bg-gray-200 dark:bg-gray-800 overflow-hidden">
+        <img
+          src={imageSrc}
           alt={hotel.name}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          className="object-cover group-hover:scale-110 transition-transform duration-500"
+          className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder.jpg';
+          }}
         />
         <div className="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1 shadow-sm">
           <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
@@ -58,7 +65,10 @@ export default function HotelCard({ hotel }: HotelCardProps) {
               ${hotel.pricePerNight.toFixed(2)}
             </p>
           </div>
-          <Link href={`/hotels/${hotel.id}`} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors text-center">
+          <Link
+            href={`/hotels/${hotel.id}`}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors text-center"
+          >
             View Deal
           </Link>
         </div>

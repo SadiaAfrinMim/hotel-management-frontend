@@ -18,15 +18,9 @@ interface BookingState {
   bookings: Booking[];
 }
 
-const getStoredBookings = (): Booking[] => {
-  if (typeof window === 'undefined') return [];
-  const stored = localStorage.getItem('bookings');
-  return stored ? JSON.parse(stored) : [];
-};
-
 const initialState: BookingState = {
   currentBooking: null,
-  bookings: getStoredBookings(),
+  bookings: [],
 };
 
 export const bookingSlice = createSlice({
