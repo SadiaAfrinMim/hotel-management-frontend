@@ -4,9 +4,10 @@ export interface Hotel {
   id: string;
   name: string;
   destination: string;
-  price: number;
+  images: string[];
+  pricePerNight: number;
   rating: number;
-  image: string;
+  availableRooms: number;
   amenities: string[];
   description: string;
 }
@@ -35,7 +36,7 @@ const initialState: HotelState = {
   loading: false,
   error: null,
   filters: {},
-  sorting: { field: 'price', direction: 'asc' },
+  sorting: { field: 'pricePerNight', direction: 'asc' },
 };
 
 export const hotelSlice = createSlice({
