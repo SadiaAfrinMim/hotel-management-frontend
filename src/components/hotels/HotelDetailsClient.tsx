@@ -68,6 +68,7 @@ export default function HotelDetailsClient({ hotel }: HotelDetailsClientProps) {
       totalPrice: total,
       status: 'pending',
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     dispatch(setCurrentBooking(booking));
     router.push('/checkout');

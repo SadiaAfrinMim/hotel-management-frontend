@@ -11,6 +11,7 @@ export interface Booking {
   totalPrice: number;
   status: 'pending' | 'confirmed' | 'cancelled';
   createdAt: string;
+  updatedAt: string;
 }
 
 interface BookingState {

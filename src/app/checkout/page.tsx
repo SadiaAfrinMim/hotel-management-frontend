@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addBooking, clearCurrentBooking } from '@/store/slices/bookingSlice';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toast';
 import { ArrowLeft, CheckCircle, Calendar, Users, BedDouble, CreditCard, User, Mail, Phone, ChevronRight, Home, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 interface GuestInfoData {
   fullName: string;
@@ -74,6 +76,7 @@ function SuccessAnimation() {
 }
 
 export default function CheckoutPage() {
+  const { showToast } = useToast();
   const [step, setStep] = useState<Step>('Review Details');
   const [bookingReference, setBookingReference] = useState<string>('');
   const dispatch = useAppDispatch();
@@ -99,12 +102,12 @@ export default function CheckoutPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">No Active Booking</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">Please select a hotel room to proceed with your booking.</p>
-          <button
-            onClick={() => router.push('/')}
+          <Link
+            href="/bookings"
             className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors"
           >
-            Browse Hotels
-          </button>
+            View My Bookings
+          </Link>
         </div>
       </div>
     );
@@ -118,16 +121,16 @@ export default function CheckoutPage() {
     const ref = `BK-${Math.floor(10000 + Math.random() * 90000)}`;
     setBookingReference(ref);
 
-    const confirmedBooking = {
+    dispatch(addBooking({
       ...booking,
       id: ref,
-      status: 'confirmed' as const,
+      status: 'confirmed',
       updatedAt: new Date().toISOString(),
-    };
-
-    dispatch(addBooking(confirmedBooking));
+    }));
+    showToast('Booking confirmed successfully!', 'success');
     dispatch(clearCurrentBooking());
     setStep('Confirmation');
+    router.push('/bookings');
   };
 
   const handleNext = () => {
@@ -317,13 +320,13 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <button
-              onClick={() => router.push('/')}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
-            >
-              <Home className="h-4 w-4" />
-              Back to Home
-            </button>
+              <Link
+                href="/bookings"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
+              >
+                <Home className="h-4 w-4" />
+                Go to My Bookings
+              </Link>
           </div>
         );
     }

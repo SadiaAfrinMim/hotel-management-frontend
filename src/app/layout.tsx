@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ReduxProvider } from "@/store/providers/ReduxProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ToastProvider } from "@/components/ui/Toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
@@ -34,9 +35,11 @@ export default function RootLayout({
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <ReduxProvider>
           <ThemeProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <ToastProvider>
+              <Navbar />
+              {children}
+              <Footer />
+            </ToastProvider>
           </ThemeProvider>
         </ReduxProvider>
       </body>
